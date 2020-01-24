@@ -219,15 +219,22 @@ jobs:
         # See: https://docs.travis-ci.com/user/caching/#caches-and-build-matrices
         - JOBCACHE=12
 
-    - name: Run Rust tests(windows)
+    - name: Run tests(windows)
       language: rust
       os: windows
       rust: stable
-      cache: cargo
+      cache:
+        - pip
+        - cargo
+      before_install:
+        - choco install python3 --version=3.8.0 && export PATH=/c/Python38:/c/Python38/Scripts:/c/Python38/Tools:"$PATH"
+      install:
+        - pip install pipenv
+        - pushd tests && pipenv install && popd
+        - powershell.exe -ExecutionPolicy Bypass scripts/symlinks-to-hardlinks.ps1
       script:
-        - powershell.exe scripts/symlinks-to-hardlinks.ps1
-        - cargo build --verbose --all
-        - cargo test --verbose --all
+        - cargo build --verbose --all --release
+        - pushd tests && pipenv run pytest && popd
       env:
         # Prevention of cache corruption.
         # See: https://docs.travis-ci.com/user/caching/#caches-and-build-matrices
