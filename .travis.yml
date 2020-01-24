@@ -227,6 +227,7 @@ jobs:
         - pip
         - cargo
       before_install:
+        - rustup default stable-x86_64-pc-windows-msvc
         - choco install python3 --version=3.8.0 && export PATH=/c/Python38:/c/Python38/Scripts:/c/Python38/Tools:"$PATH"
       install:
         - pip install pipenv
