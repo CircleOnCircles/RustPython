@@ -218,3 +218,17 @@ jobs:
         # Prevention of cache corruption.
         # See: https://docs.travis-ci.com/user/caching/#caches-and-build-matrices
         - JOBCACHE=12
+
+    - name: Run Rust tests(windows)
+      language: rust
+      os: windows
+      rust: stable
+      cache: cargo
+      script:
+        - powershell.exe scripts/symlinks-to-hardlinks.ps1
+        - cargo build --verbose --all
+        - cargo test --verbose --all
+      env:
+        # Prevention of cache corruption.
+        # See: https://docs.travis-ci.com/user/caching/#caches-and-build-matrices
+        - JOBCACHE=13
